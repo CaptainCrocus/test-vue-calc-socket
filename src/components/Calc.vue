@@ -42,7 +42,6 @@
 <script>
 import Member from '@/components/Member'
 import FstMember from '@/components/FstMember'
-import Fractional from 'fractional'
 import math from 'mathjs'
 
 export default {
