@@ -17,7 +17,7 @@
             </b-col>
             <b-form-textarea :rows="10" :max-rows="10" v-model="console">
             </b-form-textarea>
-            <b-btn @click="sendMessage()" variant="danger">Связаться</b-btn>
+            <b-btn @click="showArray" variant="danger">Показать</b-btn>
           </b-row>
         </b-col>
       </b-row>
@@ -59,31 +59,37 @@ export default {
         timerId: setTimeout(()=>{
           this.console += "Превышено время ожидание ответа на запрос на удаление коммента с id = " + id + "\n";
           this.console += "Коммент с id = " + id + " не будет удален\n";
-          this.commentsForDel.forEach((item, i, arr) => {
-              if(id == item.id)
-                arr.splice(i, 1);
+          this.commentsForDel = this.commentsForDel.filter(item => {
+              return id != item.id;
           });
         }, this.timeout),
         id: id
       });
+    },
+    showArray(){
+      console.log(this.commentsForDel);
     }
   },
   created(){
-    this.$options.sockets.onmessage = (data) => {
-      this.comments.forEach((item, i, arr) => {
-        if(item.id == data.data){
-          this.console += "Запрос на удаление коммента с id = " + item.id + " одобрен\n";
-          arr.splice(i, 1);          
-          this.console += "Коммент с id = " + item.id + " удален\n";
-          this.commentsForDel.forEach((item, i, arr) => {
-              if(data.data == item.id){
-                clearTimeout(item.timerId);
-                this.console += "Интервал очищен\n";
-                arr.splice(i, 1);
-              }
-          });
-        }
+    this.$options.sockets.onmessage = ({data}) => {
+      const index = this.comments.findIndex(({id}) => {
+        return id == data;
       });
+      console.log("Index: ", index);
+      if(index != -1){
+        this.console += "Запрос на удаление коммента с id = " + data + " одобрен\n";
+        this.comments.splice(index, 1);
+        this.console += "Коммент с id = " + data + " удален\n";
+        const indexOfDel = this.commentsForDel.findIndex(({id}) => {
+          return id == data;
+        });
+        if(indexOfDel != -1){
+          console.log(this.commentsForDel);
+          clearTimeout(this.commentsForDel[indexOfDel].timerId);
+          this.console += "Интервал очищен\n";
+          this.commentsForDel.splice(indexOfDel, 1);
+        }
+      }
     };
     this.$options.sockets.onerror = (data) => {
       this.console += "Ошибка работы с сокетом\n";          
@@ -95,7 +101,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card{
   margin-top: 12px;

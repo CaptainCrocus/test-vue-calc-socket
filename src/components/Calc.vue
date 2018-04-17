@@ -73,20 +73,20 @@ export default {
       this.calculate();
     },
     changeMember(evt){
-      this.members.forEach((item, i, arr)=>{
-        if(item.index === evt.message.index){
+      this.members.forEach(({index}, i, arr)=>{
+        if(index === evt.message.index){
           arr[i] = evt.message;
         }
       });
-      this.errors = this.errors.filter((item)=>{
-        return item.index !== evt.message.index;
+      this.errors = this.errors.filter(({index})=>{
+        return index !== evt.message.index;
       });
       this.calculate();
     },
     changeFstMember(evt){
       this.fstMember = evt.message;
-      this.errors = this.errors.filter((item)=>{
-        return item.index !== evt.message.index;
+      this.errors = this.errors.filter(({index})=>{
+        return index !== evt.message.index;
       });
       this.calculate();
     },
@@ -96,9 +96,7 @@ export default {
         result += this.members[i].op + (this.members[i].num / this.members[i].denum);
       }
       console.log("String: ", result);
-      // console.log("Math String: ", math.eval(result));
       result = math.fraction(math.eval(result));
-      // console.log("Math fraction: ", result);
       this.numerator = result.n;
       this.denumerator = result.d;
       this.sign = (result.s === 1) ? '' :  '-';
@@ -113,6 +111,5 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 </style>

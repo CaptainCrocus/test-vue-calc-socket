@@ -41,12 +41,14 @@ export default {
         return;
       }
       this.prevOp = this.operator;
-      this.$emit('changeresult', { message: {
-        index: this.ind,
-        num: parseInt(this.numerator),
-        denum: parseInt(this.denumerator),
-        op: this.operator
-      } })
+      this.$emit('changeresult', { 
+        message: {
+          index: this.ind,
+          num: parseInt(this.numerator),
+          denum: parseInt(this.denumerator),
+          op: this.operator
+        }
+      })
     }
   },
   created(){

@@ -34,11 +34,13 @@ export default {
         return;
       }
 
-      this.$emit('changeresult', { message: {
-        index: 0,
-        num: parseInt(this.numerator),
-        denum: parseInt(this.denumerator)
-      } })
+      this.$emit('changeresult', { 
+          message: {
+            index: 0,
+            num: parseInt(this.numerator),
+            denum: parseInt(this.denumerator)
+          }
+      })
     }
   },
   created(){
